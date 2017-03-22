@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:36:14 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/21 19:04:02 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/22 20:24:20 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ static t_env	*env_build(char **env, t_env *first_env)
 		while (env[i][j] && env[i][j] != '=')
 			j++;
 		new_env->name = ft_strsub(env[i], 0, j);
-		new_env->value = ft_strsub(env[i], j + 1, ft_strlen(env[i]) - j);
+		if ((ft_strcmp(new_env->name, "SHLVL")) == 0)
+			new_env->value = ft_strdup(ft_itoa(ft_atoi(&env[i][j + 1]) + 1));
+		else
+			new_env->value = ft_strsub(env[i], j + 1, ft_strlen(env[i]) - j);
 		j = 0;
 		bef_env = new_env;
 		new_env->next = NULL;
@@ -95,10 +98,15 @@ int		main(int ac, char **av, char **env)
 	char	*prompt;
 	t_env	*s_env;
 	char	**test;
+	int i;
+	t_env *tmp;
 
+	i = 0;
 	s_env = NULL;
 	prompt = NULL;
 	s_env = env_build(env, s_env);
+	tmp = s_env;
+	s_env = tmp;
 	test = list_to_tab(s_env);
 	show_prompt(s_env, env);
 	return(0);

@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 15:14:05 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/21 19:03:53 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/22 20:24:26 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	**utility(char **st, t_env *s_env)
 int		builtin(char **cstin, t_env *env, char *stin)
 {
 	t_env *search;
-	// cd // echo // exit // env // setenv // unsetenv	
+	// cd // echo // exit
 	if (cstin[0])
 	{
 		if (ft_strcmp(cstin[0], "exit") == 0)
@@ -78,7 +78,10 @@ int		builtin(char **cstin, t_env *env, char *stin)
 				}
 			}
 			else
-				return (1);
+			{
+				search = search_env(env, "HOME");
+				chdir(search->value);
+			}
 			search = search_env(env, "PWD");
 			ft_strdel(&search->value);
 			search->value = ft_strnew(PATH_MAX);
@@ -86,36 +89,76 @@ int		builtin(char **cstin, t_env *env, char *stin)
 			search->value = ft_strjoin("PWD=", search->value);
 			return (1);
 		}
-		
+/////////////		
 		int i;
-		int j;
+		int space;
+		int	cot;
 
-		j = 0;
+		cot = 0;
+		space = 0;
 		i = 5;
 		if (ft_strcmp(cstin[0], "echo") == 0)
 		{
 			while (stin[i])
 			{
-				if (stin[i] == ' ')
-				{
-					ft_putchar(stin[i]);
-					while (stin[i] && stin[i] == ' ')
-						i++;
-				}
-	//			if (stin[i] == '\' stin[i] '' || stin[i])
+				if (stin[i] == 39 || stin[i] == 34)
+					cot++;
+				if (!stin[i])
+					break;
+				i++;
+			}
+			if (cot % 2 != 0)
+			{
+				ft_putstr_fd("quote ", 2);
+				ft_putchar('\n');
+				return (1);
+			}
+		////////
+			i = 5;
+			cot = 0;
+			space = 0;
+			while (stin[i])
+			{
 				if (stin[i] == 39 || stin[i] == 34)
 				{
-					j = i;
-					if (stin[i - 1] == 92)
-						ft_putchar(stin[i]);
-					while (stin[i] && stin[i] != stin[j])
+					if (cot == 0)
+						cot = 1;
+					else
+						cot = 0;
+					i++;
+					if (stin[i - 1] == stin[i])
 					{
-						ft_putchar(stin[i]);
+						cot = 0;
 						i++;
 					}
+					if (!stin[i])
+						break;
 				}
+			////////////
+				if (cot == 0 && stin[i] == ' ')
+				{
+					while (stin[i] && stin[i] == ' ')
+						i++;
+					i--;
+				}
+				ft_putchar(stin[i]);
+				i++;
 			}
+			ft_putchar('\n');
+			return (1);
 		}
 	}
 	return (0);
-}	
+}
+
+void	make_env(t_env *s_env, char **cstin)
+{
+	if ((ft_strcmp(cstin[0], "env")) == 0)
+		while (s_env)
+		{
+			ft_printf("%s=%s\n", s_env->name, s_env->value);
+			s_env = s_env->next;
+		}
+	
+	
+}
