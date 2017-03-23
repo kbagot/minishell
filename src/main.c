@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:36:14 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/22 20:24:20 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/23 20:11:26 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,56 @@ char **list_to_tab(t_env *lenv)
 	}
 	return (ft_strsplit(env, ' '));
 }
+void	delete_env(t_env *env, char *name)
+{
+	t_env *bef;
+
+	bef = NULL;
+	while (env)
+	{
+		if ((ft_strcmp(env->name, name)) == 0)
+		{
+			bef->next = env->next;
+			ft_strdel(&env->name);
+			ft_strdel(&env->value);
+			free(env);
+			env = NULL;
+			return;
+		}
+		bef = env;
+		env = env->next;
+	}
+}
+
+void	add_env(t_env *env, char **cstin)
+{
+	t_env	*search;
+
+	search = search_env(env, cstin[0]);
+	if (search && cstin[0])
+	{
+		ft_strdel(&search->value);
+		search->value = ft_strdup(cstin[1]);
+		return;
+	}
+	while (env->next)
+		env = env->next;
+	if (cstin[0])
+	{
+		env->next = ft_memalloc(sizeof(t_env));
+		env->next->name = ft_strdup(cstin[0]);
+		if (cstin[1])
+			env->next->value = ft_strdup(cstin[1]);
+		else
+			env->next->value = ft_strnew(1);
+	}
+	else
+	{
+		ft_putstr_fd("usage: setenv [name=value ...]", 2);
+		ft_putchar('\n');
+	}
+}
+
 
 t_env *search_env(t_env *env, char *name)
 {
@@ -90,7 +140,8 @@ static void show_prompt(t_env *s_env, char **env)
 	cstin = ft_strsplit(stin, ' ');
 	parse_entry(s_env, cstin, stin); // inbuilt or bin
 	ft_strdel(&stin);
-	show_prompt(s_env, env);
+	if (s_env)
+		show_prompt(s_env, env);
 }
 
 int		main(int ac, char **av, char **env)
@@ -102,6 +153,8 @@ int		main(int ac, char **av, char **env)
 	t_env *tmp;
 
 	i = 0;
+	ac = 1;
+	av = NULL;
 	s_env = NULL;
 	prompt = NULL;
 	s_env = env_build(env, s_env);

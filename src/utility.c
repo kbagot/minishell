@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 15:14:05 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/22 20:24:26 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/23 20:11:23 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static char	*join(char *s1, char *s2, char *s3)
 	ft_strdel(&tmp);
 	return (new);
 }
+
 char	**utility(char **st, t_env *s_env)
 {
 	int		i;
@@ -63,6 +64,7 @@ int		builtin(char **cstin, t_env *env, char *stin)
 				exit(ft_atoi(cstin[1]));
 			else
 				exit(0);
+			return (1);
 		}
 
 		if (ft_strcmp(cstin[0], "cd") == 0)
@@ -151,14 +153,44 @@ int		builtin(char **cstin, t_env *env, char *stin)
 	return (0);
 }
 
-void	make_env(t_env *s_env, char **cstin)
+int		make_env(t_env *s_env, char **cstin)
 {
-	if ((ft_strcmp(cstin[0], "env")) == 0)
-		while (s_env)
+	int	retvalue;
+	int		i;
+	t_env	*tmp;
+
+	i = 0;
+	retvalue = 0;
+	tmp = s_env;
+	while (cstin[i])
+	{
+		if (cstin[i] && ((ft_strcmp(cstin[i], "env")) == 0))
 		{
-			ft_printf("%s=%s\n", s_env->name, s_env->value);
-			s_env = s_env->next;
+			while (s_env)
+			{
+				ft_printf("%s=%s\n", s_env->name, s_env->value);
+				s_env = s_env->next;
+			}
+			s_env = tmp;
+			retvalue = 1;
 		}
-	
-	
+		if (cstin[i] && ((ft_strcmp(cstin[i], "unsetenv")) == 0))
+		{
+			if (cstin[i + 1])
+			{
+				delete_env(s_env, cstin[i + 1]);
+				retvalue = 1;
+				cstin = &cstin[i + 1];
+			}
+		}
+		if (cstin[i] && ((ft_strcmp(cstin[i], "setenv")) == 0))
+			if (cstin[i + 1])
+			{
+				add_env(s_env, &cstin[i + 1]);
+				retvalue = 1;
+			}
+		i++;
+	}
+	printf("lol\n");
+	return (retvalue);
 }
