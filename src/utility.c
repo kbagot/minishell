@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 15:14:05 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/23 20:11:23 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/24 17:22:10 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,107 +52,6 @@ char	**utility(char **st, t_env *s_env)
 	return (st);
 }
 
-int		builtin(char **cstin, t_env *env, char *stin)
-{
-	t_env *search;
-	// cd // echo // exit
-	if (cstin[0])
-	{
-		if (ft_strcmp(cstin[0], "exit") == 0)
-		{
-			if (cstin[1])
-				exit(ft_atoi(cstin[1]));
-			else
-				exit(0);
-			return (1);
-		}
-
-		if (ft_strcmp(cstin[0], "cd") == 0)
-		{
-			if (cstin[1])
-			{
-				if ((chdir(cstin[1])) == -1)
-					return (1);
-				else if ((ft_strcmp(cstin[1], "~") == 0))
-				{
-					search = search_env(env, "HOME");
-					chdir(search->value);
-				}
-			}
-			else
-			{
-				search = search_env(env, "HOME");
-				chdir(search->value);
-			}
-			search = search_env(env, "PWD");
-			ft_strdel(&search->value);
-			search->value = ft_strnew(PATH_MAX);
-			getcwd(search->value, PATH_MAX);
-			search->value = ft_strjoin("PWD=", search->value);
-			return (1);
-		}
-/////////////		
-		int i;
-		int space;
-		int	cot;
-
-		cot = 0;
-		space = 0;
-		i = 5;
-		if (ft_strcmp(cstin[0], "echo") == 0)
-		{
-			while (stin[i])
-			{
-				if (stin[i] == 39 || stin[i] == 34)
-					cot++;
-				if (!stin[i])
-					break;
-				i++;
-			}
-			if (cot % 2 != 0)
-			{
-				ft_putstr_fd("quote ", 2);
-				ft_putchar('\n');
-				return (1);
-			}
-		////////
-			i = 5;
-			cot = 0;
-			space = 0;
-			while (stin[i])
-			{
-				if (stin[i] == 39 || stin[i] == 34)
-				{
-					if (cot == 0)
-						cot = 1;
-					else
-						cot = 0;
-					i++;
-					if (stin[i - 1] == stin[i])
-					{
-						cot = 0;
-						i++;
-					}
-					if (!stin[i])
-						break;
-				}
-			////////////
-				if (cot == 0 && stin[i] == ' ')
-				{
-					while (stin[i] && stin[i] == ' ')
-						i++;
-					i--;
-				}
-				ft_putchar(stin[i]);
-				i++;
-			}
-			ft_putchar('\n');
-			return (1);
-		}
-	}
-	return (0);
-}
-
 int		make_env(t_env *s_env, char **cstin)
 {
 	int	retvalue;
@@ -191,6 +90,6 @@ int		make_env(t_env *s_env, char **cstin)
 			}
 		i++;
 	}
-	printf("lol\n");
+//	printf("lol\n");
 	return (retvalue);
 }

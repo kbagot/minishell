@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 20:58:40 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/23 20:11:24 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/24 20:47:09 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,31 @@ void	exec_utility(char **env, char **stin)
 {
 	pid_t	pid;
 
-	printf("%s\n", stin[0]);
+//	printf("%s\n", stin[0]);
 	if (stin[0] && stin[0][0] != '.' && stin[0][0] != '/')
 	{
 		ft_putstr_fd("minishell: command not found: ", 2);
 		ft_putstr_fd(stin[0], 2);
-		ft_putchar('\n');
+		ft_putchar_fd('\n', 2);
+	//	ft_putchar('\n');
 		return;
 	}
+/*	int i;
+	i = 1;
+	while (stin[i])
+	{
+		if (stin[i]){
+		if (stin[i][0] == 34)
+			stin[i] = &stin[i][1];
+		if (ft_strlen(stin[i]) - 1 == 44)
+			stin[i][ft_strlen(stin[i]) - 1] = '\0';}
+		i++;
+	}*/
 	pid = fork();
 	if (pid == 0)
 	{
 		if ((execve(stin[0], stin, env)) == -1)
-			exit(0);
+			exit(1);
 	}
 	else
 		wait(NULL);
