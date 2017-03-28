@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:36:14 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/24 20:47:06 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/28 19:23:05 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ t_env *search_env(t_env *env, char *name)
 	}
 	return (NULL);
 }
-
+/*
 char		*unsplit(char **dt)
 {
 	int		i;
@@ -148,6 +148,7 @@ char		*unsplit(char **dt)
 	printf("%s\n", new);
 	return (new);
 }
+*/
 
 static void set(char **str, t_env *env)
 {
@@ -188,8 +189,8 @@ static void show_prompt(t_env *s_env, char **env)
 	ft_printf("\033[0;36m[%s]> \033[0m", &(ft_strrchr(search->value, '/')[1]));
 	get_next_line(0, &stin);
 	cstin = ft_strsplit(stin, ' ');
-	set(cstin, s_env); // EXEC DOUBLE TO SIMPLE AVANT LS ET LE RESTE EN DOUBLE TABLEAU
-	parse_entry(s_env, cstin, stin); // inbuilt or bin
+	set(cstin, s_env);
+	parse_entry(s_env, cstin, stin);
 	ft_strdel(&stin);
 	if (s_env)
 		show_prompt(s_env, env);

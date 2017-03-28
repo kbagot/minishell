@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 20:14:48 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/24 20:47:13 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/28 19:23:06 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_env				*search_env(t_env *env, char *name);
 char				**list_to_tab(t_env *lenv);
 int					builtin(char **cstin, t_env *env, char *stin);
 char				**utility(char **st, t_env *s_env);
-int					make_env(t_env *s_env, char **cstin);
+int					master_env(t_env *s_env, char **cstin, t_env *tmp_env);
 void				delete_env(t_env *env, char *name);
 void				add_env(t_env *env, char **cstin);
 int					exec_echo(char *stin);
