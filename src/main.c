@@ -6,13 +6,13 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:36:14 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/28 19:23:05 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/29 20:30:48 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static t_env	*env_build(char **env, t_env *first_env)
+t_env	*env_build(char **env, t_env *first_env)
 {
 	t_env	*bef_env;
 	t_env	*new_env;
@@ -35,7 +35,7 @@ static t_env	*env_build(char **env, t_env *first_env)
 		if ((ft_strcmp(new_env->name, "SHLVL")) == 0)
 			new_env->value = ft_strdup(ft_itoa(ft_atoi(&env[i][j + 1]) + 1));
 		else if ((ft_strcmp(new_env->name, "SHELL")) == 0)
-			new_env->value = ft_strdup("minishellTOFIX");  /////////////////////
+			new_env->value = ft_strdup("~/Documents/Projet/minishell/minishell");  /////////////////////
 		else
 			new_env->value = ft_strsub(env[i], j + 1, ft_strlen(env[i]) - j);
 		j = 0;

@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 20:58:40 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/28 19:23:02 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/29 20:30:46 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,11 @@ void	parse_entry(t_env *s_env, char **cstin, char *stin)
 	t_env *tmp_env;
 
 	tmp_env = NULL;
-	if ((builtin(cstin, s_env, stin)) == 0) // cd / echo /exit  /unsetenv/ setenv
-		if ((master_env(s_env, cstin, tmp_env)) == 0)// env // unsetenv // setenv
-			if ((cstin = utility(cstin, s_env)))
-				exec_utility(list_to_tab(tmp_env), cstin);
+	if ((builtin(cstin, s_env, stin))) // cd / echo /exit  /unsetenv/ setenv
+		return;
+	master_env(s_env, cstin, tmp_env);// env
+	if ((cstin = utility(cstin, s_env)))
+		exec_utility(list_to_tab(tmp_env), cstin);
 	if (tmp_env)
 	{
 		free(tmp_env);
