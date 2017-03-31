@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 17:31:43 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/28 17:23:43 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/30 16:05:29 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	check_quote(char *stin)
 		if (stin[i] == 39 || stin[i] == 34)
 			cot++;
 		if (!stin[i])
-			break;
+			break ;
 		i++;
 	}
 	if (cot % 2 != 0)
@@ -36,7 +36,7 @@ static int	check_quote(char *stin)
 }
 
 static int	cot_mod(char *stin, int cot)
-{	
+{
 	if (stin[0] == stin[1])
 		return (0);
 	if (cot == 0)
@@ -45,7 +45,7 @@ static int	cot_mod(char *stin, int cot)
 		return (0);
 }
 
-int		exec_echo(char *stin)
+int			exec_echo(char *stin)
 {
 	int cot;
 	int i;

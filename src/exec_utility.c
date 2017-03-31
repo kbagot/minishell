@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 20:58:40 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/29 20:30:46 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/03/31 18:23:29 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,42 +22,26 @@ void	exec_utility(char **env, char **stin)
 		ft_putstr_fd("minishell: command not found: ", 2);
 		ft_putstr_fd(stin[0], 2);
 		ft_putchar_fd('\n', 2);
-	//	ft_putchar('\n');
-		return;
+		return ;
 	}
-/*	int i;
-	i = 1;
-	while (stin[i])
-	{
-		if (stin[i]){
-		if (stin[i][0] == 34)
-			stin[i] = &stin[i][1];
-		if (ft_strlen(stin[i]) - 1 == 44)
-			stin[i][ft_strlen(stin[i]) - 1] = '\0';}
-		i++;
-	}*/
 	pid = fork();
 	if (pid == 0)
 	{
-		if ((execve(stin[0], stin, env)) == -1)
+		if (execve(stin[0], stin, env) == -1)
 			exit(1);
 	}
 	else
 		wait(NULL);
 }
+
 void	parse_entry(t_env *s_env, char **cstin, char *stin)
 {
 	t_env *tmp_env;
 
 	tmp_env = NULL;
-	if ((builtin(cstin, s_env, stin))) // cd / echo /exit  /unsetenv/ setenv
-		return;
+	if ((builtin(cstin, s_env, stin)))// cd / echo /exit  /unsetenv/ setenv
+		return ;
 	master_env(s_env, cstin, tmp_env);// env
 	if ((cstin = utility(cstin, s_env)))
 		exec_utility(list_to_tab(tmp_env), cstin);
-	if (tmp_env)
-	{
-		free(tmp_env);
-		tmp_env = NULL;
-	}
 }
