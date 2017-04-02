@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 15:14:05 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/31 15:32:52 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/02 22:17:40 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,30 @@ static char	*join(char *s1, char *s2, char *s3)
 	return (new);
 }
 
+static char	**path_init(t_env *s_env)
+{
+	char	**path;
+	t_env	*search;
+	char	*tmp;
+
+	if ((search = search_env(s_env, "PATH")))
+	{
+		tmp = join(ft_strdup(search->value), ":", _PATH_DEFPATH);
+		path = ft_strsplit(tmp, ':');
+		ft_strdel(&tmp);
+	}
+	else
+		path = ft_strsplit(_PATH_DEFPATH, ':');
+	return (path);
+}
+
 char		**utility(char **st, t_env *s_env)
 {
 	int		i;
 	char	**path;
-	t_env	*search;
 
 	i = 0;
-	if ((search = search_env(s_env, "PATH")))
-		path = ft_strsplit((join(ft_strdup(search->value), ":",
-						_PATH_DEFPATH)), ':');
-	else
-		path = ft_strsplit(_PATH_DEFPATH, ':');
+	path = path_init(s_env);
 	while (path[i])
 	{
 		path[i] = join(path[i], "/", st[0]);
@@ -43,12 +55,11 @@ char		**utility(char **st, t_env *s_env)
 		{
 			ft_strdel(&st[0]);
 			st[0] = ft_strdup(path[i]);
-			ft_strdel(&path[i]);
+			ft_tabdel(path);
 			return (st);
 		}
-		ft_strdel(&path[i]);
 		i++;
 	}
-	ft_strdel(path);
+	ft_tabdel(path);
 	return (st);
 }

@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 16:58:48 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/31 18:23:27 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/02 22:17:38 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,10 @@ static int	exec_env(char **cstin, t_env *env, char *stin)
 int			builtin(char **cstin, t_env *env, char *stin)
 {
 	if (cstin[0] && (ft_strcmp(cstin[0], "exit") == 0))
+	{
+		ft_strdel(&stin);
 		return (exec_exit(cstin));
+	}
 	else if (cstin[0] && (ft_strcmp(cstin[0], "cd") == 0))
 		return (exec_cd(cstin, env));
 	else if (cstin[0] && (ft_strcmp(cstin[0], "echo") == 0 &&

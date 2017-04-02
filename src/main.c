@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:36:14 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/31 18:23:31 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/02 22:17:44 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ static void		show_prompt(t_env *s_env, char **env)
 	set(cstin, s_env);
 	parse_entry(s_env, cstin, stin);
 	ft_strdel(&stin);
+	ft_tabdel(cstin);
 	if (s_env || !s_env)
 		show_prompt(s_env, env);
 }
@@ -102,6 +103,7 @@ int				main(int ac, char **av, char **env)
 {
 	t_env	*s_env;
 	t_env	*search;
+	char	*tmp;
 
 	search = NULL;
 	if (ac == 1)
@@ -110,10 +112,23 @@ int				main(int ac, char **av, char **env)
 		s_env = NULL;
 		s_env = env_build(env, s_env);
 		if ((search = search_env(s_env, "SHLVL")))
-			search->value = ft_strdup(ft_itoa(ft_atoi(search->value) + 1));
+		{
+			tmp = search->value;
+			search->value = ft_itoa(ft_atoi(tmp) + 1);
+			ft_strdel(&tmp);
+		}
 		show_prompt(s_env, env);
 	}
 	else
 		ft_putstr_fd("minishell: can't open input file\nusage: minishell", 2);
+	if (s_env)
+		while (s_env)
+		{
+			ft_strdel(&s_env->name);
+			ft_strdel(&s_env->value);
+			search = s_env->next;
+			free(s_env);
+			s_env = search;
+		}
 	return (0);
 }

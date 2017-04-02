@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/29 19:41:17 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/31 17:09:09 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/02 19:18:04 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,27 +40,33 @@ static void	addtmp_env(char **cstin, t_env **tmp_env)
 
 static void	clean_env(t_env **tmp_env, char **cstin)
 {
+	t_env	*save;
+
 	if (tmp_env)
-	{
-		free(*tmp_env);
-		*tmp_env = NULL; //leaks land;i delete contant;
-	}
+		while (*tmp_env)
+		{
+			ft_strdel(&(*tmp_env)->name);
+			ft_strdel(&(*tmp_env)->value);
+			save = (*tmp_env)->next;
+			free(*tmp_env);
+			*tmp_env = save;
+		}
 	swap_dat(cstin, 2);
 }
 
-static void	make_env(char **cstin, t_env *tmp_env)
+static void	make_env(char **cstin, t_env **tmp_env)
 {
 	while (cstin[0])
 	{
 		if (cstin[0] && cstin[1] && ft_strcmp(cstin[0], "env") == 0 &&
 				ft_strcmp(cstin[1], "-i") == 0)
-			clean_env(&tmp_env, cstin);
+			clean_env(tmp_env, cstin);
 		else if (cstin[0] && cstin[1] && ft_strcmp(cstin[0], "env") == 0 &&
 				ft_strchr(cstin[1], '='))
-			addtmp_env(cstin, &tmp_env);
+			addtmp_env(cstin, tmp_env);
 		else if (cstin[0] && ft_strcmp(cstin[0], "env") == 0 && !cstin[1])
 		{
-			print_env(cstin, tmp_env);
+			print_env(cstin, *tmp_env);
 			break ;
 		}
 		else if (cstin[0] && ft_strcmp(cstin[0], "env") == 0)
@@ -73,14 +79,14 @@ static void	make_env(char **cstin, t_env *tmp_env)
 	}
 }
 
-void		master_env(t_env *s_env, char **cstin, t_env *tmp_env)
+t_env		*master_env(t_env *s_env, char **cstin, t_env *tmp_env)
 {
 	char **var;
 
+	var = list_to_tab(s_env);
+	tmp_env = env_build(var, tmp_env);
 	if (cstin[0] && ((ft_strcmp(cstin[0], "env")) == 0))
-	{
-		var = list_to_tab(s_env);
-		tmp_env = env_build(var, tmp_env);
-		make_env(cstin, tmp_env);
-	}
+		make_env(cstin, &tmp_env);
+	ft_tabdel(var);
+	return (tmp_env);
 }

@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/30 15:38:20 by kbagot            #+#    #+#             */
-/*   Updated: 2017/03/31 18:23:28 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/02 19:14:08 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,10 @@ char	**list_to_tab(t_env *lenv)
 {
 	char	*env;
 	char	*tmp;
+	char	**dest;
 
 	tmp = NULL;
+	dest = NULL;
 	env = ft_strnew(1);
 	while (lenv)
 	{
@@ -51,7 +53,9 @@ char	**list_to_tab(t_env *lenv)
 		ft_strdel(&tmp);
 		lenv = lenv->next;
 	}
-	return (ft_strsplit(env, ' '));
+	dest = ft_strsplit(env, ' ');
+	ft_strdel(&env);
+	return (dest);
 }
 
 void	delete_env(t_env *env, char *name)
