@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:36:14 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/02 22:17:44 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/03 20:53:09 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,13 @@ static void		set(char **str, t_env *env)
 	}
 }
 
-static void		show_prompt(t_env *s_env, char **env)
+static void		show_prompt(t_env *s_env, char **env, t_data *data)
 {
 	char	*stin;
 	char	**cstin;
 	t_env	*search;
 	int		i;
+	int ret;
 
 	i = 0;
 	stin = NULL;
@@ -89,23 +90,37 @@ static void		show_prompt(t_env *s_env, char **env)
 				&(ft_strrchr(search->value, '/')[1]));
 	else
 		ft_printf("\033[0;36m[]> \033[0m");
-	get_next_line(0, &stin);
-	cstin = ft_strsplit(stin, ' ');
-	set(cstin, s_env);
-	parse_entry(s_env, cstin, stin);
-	ft_strdel(&stin);
-	ft_tabdel(cstin);
-	if (s_env || !s_env)
-		show_prompt(s_env, env);
+	ret = get_next_line(0, &stin);
+	if (stin)
+	{
+		cstin = ft_strsplit(stin, ' ');
+		while (cstin[i])  // TMP LEAKS LAND and  maybe false
+		{
+			if (cstin[i][0] == '\"' || cstin[i][0] == '\'') 
+			{
+//				ft_strdel(cstin[i]);
+				cstin[i] = ft_strsub(cstin[i], 1, ft_strlen(cstin[i]) - 2);
+			}
+			i++;
+		}
+		set(cstin, s_env);
+		parse_entry(s_env, cstin, stin, data);
+		ft_strdel(&stin);
+		ft_tabdel(cstin);
+	}
+	if (ret == 1)
+		show_prompt(s_env, env, data);
 }
 
 int				main(int ac, char **av, char **env)
 {
 	t_env	*s_env;
-	t_env	*search;
 	char	*tmp;
+	t_env	*search;
+	t_data	*data;
 
-	search = NULL;
+	data = ft_memalloc(sizeof(t_data));
+	data->rvalue = 0;
 	if (ac == 1)
 	{
 		av = NULL;
@@ -117,18 +132,10 @@ int				main(int ac, char **av, char **env)
 			search->value = ft_itoa(ft_atoi(tmp) + 1);
 			ft_strdel(&tmp);
 		}
-		show_prompt(s_env, env);
+		show_prompt(s_env, env, data);
 	}
 	else
-		ft_putstr_fd("minishell: can't open input file\nusage: minishell", 2);
-	if (s_env)
-		while (s_env)
-		{
-			ft_strdel(&s_env->name);
-			ft_strdel(&s_env->value);
-			search = s_env->next;
-			free(s_env);
-			s_env = search;
-		}
-	return (0);
+		ft_putstr_fd("minishell: can't open input file\n", 2);
+	destroy_env(&s_env);
+	return (data->rvalue);
 }

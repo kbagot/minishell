@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/29 19:41:17 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/02 19:18:04 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/03 20:53:26 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ static void	print_env(char **cstin, t_env *tmp_env)
 	swap_dat(cstin, 1);
 }
 
-static void	addtmp_env(char **cstin, t_env **tmp_env)
+static void	addtmp_env(char **cstin, char *add, t_env **tmp_env, int del)
 {
 	char **var;
 
-	var = ft_strsplit(cstin[1], '=');
+	var = ft_strsplit(add, '=');
 	if (*tmp_env == NULL)
 	{
 		*tmp_env = ft_memalloc(sizeof(t_env));
@@ -35,7 +35,8 @@ static void	addtmp_env(char **cstin, t_env **tmp_env)
 	}
 	else if (var)
 		add_env(*tmp_env, var);
-	swap_dat(cstin, 2);
+	ft_tabdel(var);
+	swap_dat(cstin, del);
 }
 
 static void	clean_env(t_env **tmp_env, char **cstin)
@@ -61,9 +62,11 @@ static void	make_env(char **cstin, t_env **tmp_env)
 		if (cstin[0] && cstin[1] && ft_strcmp(cstin[0], "env") == 0 &&
 				ft_strcmp(cstin[1], "-i") == 0)
 			clean_env(tmp_env, cstin);
+		else if (cstin[0] && ft_strchr(cstin[0], '='))
+			addtmp_env(cstin, cstin[0], tmp_env, 1);
 		else if (cstin[0] && cstin[1] && ft_strcmp(cstin[0], "env") == 0 &&
 				ft_strchr(cstin[1], '='))
-			addtmp_env(cstin, tmp_env);
+			addtmp_env(cstin, cstin[1], tmp_env, 2);
 		else if (cstin[0] && ft_strcmp(cstin[0], "env") == 0 && !cstin[1])
 		{
 			print_env(cstin, *tmp_env);

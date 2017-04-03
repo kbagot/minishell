@@ -6,13 +6,13 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 15:14:05 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/02 22:17:40 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/03 19:03:42 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static char	*join(char *s1, char *s2, char *s3)
+char	*join(char *s1, char *s2, char *s3)
 {
 	char *tmp;
 	char *new;
