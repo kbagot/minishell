@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:36:14 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/03 20:53:09 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/04 19:08:49 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,8 @@ static void		show_prompt(t_env *s_env, char **env, t_data *data)
 	char	*stin;
 	char	**cstin;
 	t_env	*search;
-	int		i;
-	int ret;
+	int		ret;
 
-	i = 0;
 	stin = NULL;
 	if ((search = search_env(s_env, "PWD")))
 		ft_printf("\033[0;36m[%s]> \033[0m",
@@ -94,15 +92,6 @@ static void		show_prompt(t_env *s_env, char **env, t_data *data)
 	if (stin)
 	{
 		cstin = ft_strsplit(stin, ' ');
-		while (cstin[i])  // TMP LEAKS LAND and  maybe false
-		{
-			if (cstin[i][0] == '\"' || cstin[i][0] == '\'') 
-			{
-//				ft_strdel(cstin[i]);
-				cstin[i] = ft_strsub(cstin[i], 1, ft_strlen(cstin[i]) - 2);
-			}
-			i++;
-		}
 		set(cstin, s_env);
 		parse_entry(s_env, cstin, stin, data);
 		ft_strdel(&stin);

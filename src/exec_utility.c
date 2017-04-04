@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 20:58:40 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/03 20:04:37 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/04 19:10:56 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,29 @@ static int	invalid_exec(char **stin , char **env)
 	return (0);
 }
 
-void		exec_utility(char **env, char **stin, t_data *data)
+static void	sig(int rvalue, pid_t pid, char *stin)
+{
+	if (WTERMSIG(rvalue) == SIGSEGV)
+	{
+		ft_putnbr_fd(pid, 2);
+		ft_putchar_fd(' ', 2);
+		ft_putstr_fd("segmentation fault", 2);
+		ft_putstr_fd("  ", 2);
+		ft_putstr_fd(stin, 2);
+		ft_putchar_fd('\n', 2);
+	}
+	else if (WTERMSIG(rvalue) == SIGBUS)
+	{
+		ft_putnbr_fd(pid, 2);
+		ft_putchar_fd(' ', 2);
+		ft_putstr_fd("bus error", 2);
+		ft_putstr_fd("  ", 2);
+		ft_putstr_fd(stin, 2);
+		ft_putchar_fd('\n', 2);
+	}
+}
+
+static void	exec_utility(char **env, char **stin, t_data *data)
 {
 	pid_t	pid;
 	int		rvalue;
@@ -40,13 +62,15 @@ void		exec_utility(char **env, char **stin, t_data *data)
 	if (pid == 0)
 	{
 		if (execve(stin[0], stin, env) == -1)
-				exit(1);
+			exit(1);
 	}
 	else
 	{
 		wait(&rvalue);
-		data->rvalue = WEXITSTATUS(rvalue);
-
+		if (WIFEXITED(rvalue))
+			data->rvalue = WEXITSTATUS(rvalue);
+		else if (WIFSIGNALED(rvalue))
+			sig(rvalue, pid, stin[0]);
 	}
 	ft_tabdel(env);
 }
