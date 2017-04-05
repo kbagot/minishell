@@ -6,12 +6,12 @@
 #    By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/01/17 17:47:06 by kbagot            #+#    #+#              #
-#    Updated: 2017/04/04 19:03:10 by kbagot           ###   ########.fr        #
+#    Updated: 2017/04/05 20:43:50 by kbagot           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-FLAGS = -g# -fsanitize=address -Wall -Werror -Wextra
+FLAGS = -g -fsanitize=address -Wall -Werror -Wextra
 I_FILES = main.c exec_utility.c utility.c builtin.c echo.c env.c tools.c tools_two.c
 O_FILES = $(I_FILES:.c=.o)
 C_FILES = $(addprefix src/, $(I_FILES))

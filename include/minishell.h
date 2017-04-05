@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 20:14:48 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/04 19:09:05 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/05 20:34:42 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ typedef struct 		s_data
 	int				rvalue;
 }					t_data;
 
-void				parse_entry(t_env *s_env, char **cstin, char *stin, t_data *data);
+void				parse_entry(t_env **s_env, char **cstin, char *stin, t_data *data);
 t_env				*search_env(t_env *env, char *name);
 char				**list_to_tab(t_env *lenv);
-int					builtin(char **cstin, t_env *env, char *stin, t_data *data);
+int					builtin(char **cstin, t_env **env, char *stin, t_data *data);
 char				**utility(char **st, t_env *s_env);
 t_env				*master_env(t_env *s_env, char **cstin, t_env *tmp_env);
 void				delete_env(t_env *env, char *name);
@@ -44,5 +44,6 @@ t_env				*env_build(char **env, t_env *first_env);
 void				swap_dat(char **dat, int i);
 char				*join(char *s1, char *s2, char *s3);
 void				destroy_env(t_env **env);
+void				addtmp_env(char **cstin, char *add, t_env **tmp_env, int del);
 
 #endif

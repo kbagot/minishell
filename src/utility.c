@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 15:14:05 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/04 19:11:26 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/05 20:01:40 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,13 @@ static char	**path_init(t_env *s_env)
 	t_env	*search;
 	char	*tmp;
 
+	path = NULL;
 	if ((search = search_env(s_env, "PATH")))
 	{
-		tmp = join(ft_strdup(search->value), ":", _PATH_DEFPATH);
+		tmp = ft_strjoin(search->value, ":");
 		path = ft_strsplit(tmp, ':');
 		ft_strdel(&tmp);
 	}
-	else
-		path = ft_strsplit(_PATH_DEFPATH, ':');
 	return (path);
 }
 
@@ -48,7 +47,7 @@ char		**utility(char **st, t_env *s_env)
 
 	i = 0;
 	path = path_init(s_env);
-	while (path[i])
+	while (path && path[i])
 	{
 		path[i] = join(path[i], "/", st[0]);
 		if ((access(path[i], X_OK)) == 0)

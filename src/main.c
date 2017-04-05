@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:36:14 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/04 19:08:49 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/05 20:46:46 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static void		show_prompt(t_env *s_env, char **env, t_data *data)
 	{
 		cstin = ft_strsplit(stin, ' ');
 		set(cstin, s_env);
-		parse_entry(s_env, cstin, stin, data);
+		parse_entry(&s_env, cstin, stin, data);
 		ft_strdel(&stin);
 		ft_tabdel(cstin);
 	}
