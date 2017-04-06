@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/06 18:20:37 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/06 20:37:35 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/06 20:40:31 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ static void	up_pwd(t_env *pwd, t_env *oldpwd, char **cstin)
 	{
 		pwd->value = ft_strnew(PATH_MAX);
 		getcwd(pwd->value, PATH_MAX);
+		ft_strdel(&tmp);
 	}
-	ft_strdel(&tmp);
 }
 
 static void	update_env(t_env *env, char **cstin)
