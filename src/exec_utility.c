@@ -6,15 +6,15 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 20:58:40 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/05 20:46:48 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/06 19:53:50 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static int	invalid_exec(char **stin, char **env)
+static int	invalid_exec(char **stin, char **env, t_data *data)
 {
-	if ((stin[0] && stin[0][0] != '.' && stin[0][0] != '/') || !stin[0])
+	if ((stin[0] && (access(stin[0], X_OK) == -1)) || !stin[0])
 	{
 		ft_tabdel(env);
 		if (stin[0])
@@ -22,6 +22,7 @@ static int	invalid_exec(char **stin, char **env)
 			ft_putstr_fd("minishell: command not found: ", 2);
 			ft_putstr_fd(stin[0], 2);
 			ft_putchar_fd('\n', 2);
+			data->rvalue = 1;
 		}
 		return (1);
 	}
@@ -56,7 +57,7 @@ static void	exec_utility(char **env, char **stin, t_data *data)
 	int		rvalue;
 
 	rvalue = 0;
-	if (invalid_exec(stin, env))
+	if (invalid_exec(stin, env, data))
 		return ;
 	if ((pid = fork()) == 0)
 	{

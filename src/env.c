@@ -6,23 +6,22 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/29 19:41:17 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/05 20:21:58 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/06 18:02:35 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static void	print_env(char **cstin, t_env *tmp_env)
+static void	print_env(t_env *tmp_env)
 {
 	while (tmp_env)
 	{
 		ft_printf("%s=%s\n", tmp_env->name, tmp_env->value);
 		tmp_env = tmp_env->next;
 	}
-	swap_dat(cstin, 1);
 }
 
-void	addtmp_env(char **cstin, char *add, t_env **tmp_env, int del)
+void		addtmp_env(char **cstin, char *add, t_env **tmp_env, int del)
 {
 	char **var;
 
@@ -71,11 +70,6 @@ static void	make_env(char **cstin, t_env **tmp_env)
 		else if (cstin[0] && (ft_strcmp(cstin[0], "env") == 0 ||
 					(ft_strcmp(cstin[0], "setenv")) == 0) && !cstin[1])
 		{
-			print_env(cstin, *tmp_env);
-			break ;
-		}
-		else if (cstin[0] && ft_strcmp(cstin[0], "env") == 0)
-		{
 			swap_dat(cstin, 1);
 			break ;
 		}
@@ -92,7 +86,11 @@ t_env		*master_env(t_env *s_env, char **cstin, t_env *tmp_env)
 	tmp_env = env_build(var, tmp_env);
 	if (cstin[0] && (((ft_strcmp(cstin[0], "env")) == 0) ||
 			(ft_strcmp(cstin[0], "setenv")) == 0))
+	{
 		make_env(cstin, &tmp_env);
+		if (!cstin[0] || cstin[0] == NULL)
+			print_env(tmp_env);
+	}
 	ft_tabdel(var);
 	return (tmp_env);
 }

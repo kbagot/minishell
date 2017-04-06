@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/30 15:38:20 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/05 20:46:49 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/06 15:24:35 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,21 @@ char	**list_to_tab(t_env *lenv)
 	return (dest);
 }
 
-void	delete_env(t_env *env, char *name)
+void	delete_env(t_env **env_p, char *name)
 {
 	t_env *bef;
+	t_env *env;
 
 	bef = NULL;
+	env = *env_p;
 	while (env)
 	{
 		if ((ft_strcmp(env->name, name)) == 0)
 		{
-			bef->next = env->next;
+			if (bef == NULL)
+				*env_p = env->next;
+			else if (bef)
+				bef->next = env->next;
 			ft_strdel(&env->name);
 			ft_strdel(&env->value);
 			free(env);

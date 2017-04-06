@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 16:58:48 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/05 20:46:50 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/06 20:22:38 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,15 @@ static int	exec_exit(char **cstin, t_data *data, char *stin)
 
 	if (cstin[1])
 	{
-		if (!ft_isdigit(cstin[1][0]) || cstin[2])
+		if (cstin[2])
 		{
-			ft_putstr_fd("Syntax\n", 2);
+			ft_putstr_fd("exit: Too many arguments\n", 2);
+			data->rvalue = 0;
+			return (1);
+		}
+		else if (!ft_isdigit(cstin[1][0]))
+		{
+			ft_putstr_fd("exit: Syntax\n", 2);
 			data->rvalue = 1;
 		}
 		else
@@ -33,60 +39,16 @@ static int	exec_exit(char **cstin, t_data *data, char *stin)
 	return (1);
 }
 
-static void	update_env(t_env *env, char **cstin)
+static void	make_unset(char **cstin, t_env **env)
 {
-	t_env		*pwd;
-	t_env		*oldpwd;
-	char		*tmp;
-	struct stat	buf;
+	int i;
 
-	pwd = search_env(env, "PWD");
-	if ((oldpwd = search_env(env, "OLDPWD")))
-	{
-		ft_strdel(&oldpwd->value);
-		oldpwd->value = ft_strdup(pwd->value);
-	}
-	if (pwd)
-	{
-		ft_strdel(&pwd->value);
-		tmp = join(ft_strdup(oldpwd->value), "/", cstin[1]);
-		if ((lstat(tmp, &buf) == 0) && S_ISLNK(buf.st_mode) == 1 &&
-				ft_strcmp(cstin[1], "-P") != 0)
-			pwd->value = tmp;
-		else
-		{
-			pwd->value = ft_strnew(PATH_MAX);
-			getcwd(pwd->value, PATH_MAX);
-			ft_strdel(&tmp);
-		}
-	}
-}
-
-static int	exec_cd(char **cstin, t_env *env)
-{
-	t_env	*search;
-	int		i;
-
-	i = 0;
-	while (cstin[i])
-		i++;
-	if (i >= 4)
-	{
-		ft_putstr_fd("cd: Too many arguments\n", 2);
-		return (1);
-	}
-	else if (i == 2 && ft_strcmp(cstin[1], "-") == 0 &&
-			(search = search_env(env, "OLDPWD")))
-		chdir(search->value);
-	else if ((i == 2 || i == 3) && (chdir(cstin[i - 1])) == -1)
-	{
-		ft_putstr_fd("cd: No such file or directory\n", 2);
-		return (1);
-	}
-	else if (i == 1 && (search = search_env(env, "HOME")))
-		chdir(search->value);
-	update_env(env, cstin);
-	return (1);
+	i = 1;
+	if (cstin[i])
+		while (cstin[i])
+			delete_env(env, cstin[i++]);
+	else
+		ft_putstr_fd("unsetenv: Too few arguments\n", 2);
 }
 
 static int	exec_env(char **cstin, t_env **env)
@@ -99,18 +61,17 @@ static int	exec_env(char **cstin, t_env **env)
 			ft_putstr_fd("setenv : '=' not accepted in name variable\n", 2);
 		else if (cstin[1] && *env)
 			add_env(*env, &cstin[1]);
+		else if (cstin[1] && cstin[2])
+			addtmp_env(cstin, join(ft_strdup(cstin[1]), "=",
+						ft_strdup(cstin[2])), env, 1);
 		else if (cstin[1])
-			addtmp_env(cstin, join(ft_strdup(cstin[1]), "=", ft_strdup(cstin[2])), env, 1);
+			addtmp_env(cstin, join(ft_strdup(cstin[1]), "=",
+						ft_strnew(1)), env, 1);
 		else
 			return (0);
 	}
 	else if (cstin[0] && ft_strcmp(cstin[0], "unsetenv") == 0)
-	{
-		if (cstin[1])
-			delete_env(*env, cstin[1]);
-		else
-			ft_putstr_fd("unsetenv: Too few arguments\n", 2);
-	}
+		make_unset(cstin, env);
 	return (1);
 }
 
@@ -126,7 +87,7 @@ int			builtin(char **cstin, t_env **env, char *stin, t_data *data)
 				ft_strlen(stin) > 5))
 		return (exec_echo(&stin[5]));
 	else if (cstin[0] && ((ft_strcmp(cstin[0], "setenv") == 0) ||
-			ft_strcmp(cstin[0], "unsetenv") == 0))
+				ft_strcmp(cstin[0], "unsetenv") == 0))
 		return (exec_env(cstin, env));
 	return (0);
 }

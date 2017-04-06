@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 20:14:48 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/05 20:34:42 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/06 18:23:14 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char				**list_to_tab(t_env *lenv);
 int					builtin(char **cstin, t_env **env, char *stin, t_data *data);
 char				**utility(char **st, t_env *s_env);
 t_env				*master_env(t_env *s_env, char **cstin, t_env *tmp_env);
-void				delete_env(t_env *env, char *name);
+void				delete_env(t_env **env, char *name);
 void				add_env(t_env *env, char **cstin);
 int					exec_echo(char *stin);
 char				*unsplit(char **dt);
@@ -45,5 +45,6 @@ void				swap_dat(char **dat, int i);
 char				*join(char *s1, char *s2, char *s3);
 void				destroy_env(t_env **env);
 void				addtmp_env(char **cstin, char *add, t_env **tmp_env, int del);
+int					exec_cd(char **cstin, t_env *env);
 
 #endif

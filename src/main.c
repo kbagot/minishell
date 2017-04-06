@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:36:14 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/05 20:46:46 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/06 17:27:38 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static void		show_prompt(t_env *s_env, char **env, t_data *data)
 	int		ret;
 
 	stin = NULL;
-	if ((search = search_env(s_env, "PWD")))
+	if ((search = search_env(s_env, "PWD")) && ft_strchr(search->value, '/'))
 		ft_printf("\033[0;36m[%s]> \033[0m",
 				&(ft_strrchr(search->value, '/')[1]));
 	else
