@@ -6,7 +6,7 @@
 #    By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/01/17 17:47:06 by kbagot            #+#    #+#              #
-#    Updated: 2017/04/07 12:38:47 by kbagot           ###   ########.fr        #
+#    Updated: 2017/04/07 12:50:37 by kbagot           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,8 @@ all: $(NAME)
 $(NAME): $(C_FILES) include/minishell.h Makefile
 	@echo "\033[0;35mCompile $(NAME)"
 	@make -C libft/
-	gcc -c $(FLAGS) $(C_FILES)
-	gcc -o $(NAME) $(FLAGS) $(O_FILES) $(LIBFT) 
+	@gcc -c $(FLAGS) $(C_FILES)
+	@gcc -o $(NAME) $(FLAGS) $(O_FILES) $(LIBFT) 
 clean:
 	@echo "\033[0;35mDelete ft_ls object files"
 	@rm -rf $(O_FILES)
