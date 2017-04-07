@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/29 19:41:17 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/06 18:02:35 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/07 12:25:18 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ void		addtmp_env(char **cstin, char *add, t_env **tmp_env, int del)
 	{
 		*tmp_env = ft_memalloc(sizeof(t_env));
 		(*tmp_env)->name = ft_strdup(var[0]);
-		(*tmp_env)->value = ft_strdup(var[1]);
+		if (var[1])
+			(*tmp_env)->value = ft_strdup(var[1]);
+		else
+			(*tmp_env)->value = ft_strnew(1);
 		(*tmp_env)->next = NULL;
 	}
 	else if (var)
