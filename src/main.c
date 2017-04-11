@@ -6,7 +6,7 @@
 /*   By: kbagot <kbagot@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:36:14 by kbagot            #+#    #+#             */
-/*   Updated: 2017/04/06 17:27:38 by kbagot           ###   ########.fr       */
+/*   Updated: 2017/04/11 14:42:06 by kbagot           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static void		set(char **str, t_env *env)
 	}
 }
 
-static void		show_prompt(t_env *s_env, char **env, t_data *data)
+static void		show_prompt(t_env *s_env, t_data *data)
 {
 	char	*stin;
 	char	**cstin;
@@ -83,22 +83,25 @@ static void		show_prompt(t_env *s_env, char **env, t_data *data)
 	int		ret;
 
 	stin = NULL;
-	if ((search = search_env(s_env, "PWD")) && ft_strchr(search->value, '/'))
-		ft_printf("\033[0;36m[%s]> \033[0m",
-				&(ft_strrchr(search->value, '/')[1]));
-	else
-		ft_printf("\033[0;36m[]> \033[0m");
-	ret = get_next_line(0, &stin);
-	if (stin)
+	ret = 1;
+	while (ret == 1)
 	{
-		cstin = ft_strsplit(stin, ' ');
-		set(cstin, s_env);
-		parse_entry(&s_env, cstin, stin, data);
-		ft_strdel(&stin);
-		ft_tabdel(cstin);
+		if ((search = search_env(s_env, "PWD")) &&
+				ft_strchr(search->value, '/'))
+			ft_printf("\033[0;36m[%s]> \033[0m",
+					&(ft_strrchr(search->value, '/')[1]));
+		else
+			ft_printf("\033[0;36m[]> \033[0m");
+		ret = get_next_line(0, &stin);
+		if (stin)
+		{
+			cstin = strmsplit(stin, " \t\n");
+			set(cstin, s_env);
+			parse_entry(&s_env, cstin, stin, data);
+			ft_strdel(&stin);
+			ft_tabdel(cstin);
+		}
 	}
-	if (ret == 1)
-		show_prompt(s_env, env, data);
 }
 
 int				main(int ac, char **av, char **env)
@@ -121,7 +124,7 @@ int				main(int ac, char **av, char **env)
 			search->value = ft_itoa(ft_atoi(tmp) + 1);
 			ft_strdel(&tmp);
 		}
-		show_prompt(s_env, env, data);
+		show_prompt(s_env, data);
 	}
 	else
 		ft_putstr_fd("minishell: can't open input file\n", 2);
